@@ -13,7 +13,7 @@ with st.expander("ℹ️ What this tool does"):
     - A breakdown by vendor
     - An optional CSV export
     """)
-    
+
 with st.expander("ℹ️ How to use"):
     st.markdown("""
     Upload a CSV file with a maximum file size of 5MB. The file must have 4 columns titled:
@@ -93,22 +93,33 @@ if uploaded_file:
 
     @st.cache_data
     def summarize_transactions(df, start_date, end_date):
-        mask = (df["Transaction date"] >= start_date) & (df["Transaction date"] <= end_date).reset_index()
+        mask = (df["Transaction date"] >= start_date) & (df["Transaction date"] <= end_date)
         subset = df[mask].copy()
-        summary = subset.groupby("Vendor")[["Credit", "Debit", "Net"]].sum().reset_index()
-        return summary.sort_values(by="Net", ascending = False)
+        summary = (
+        subset.groupby("Vendor")[["Credit", "Debit", "Net"]]
+        .sum()
+        .reset_index()
+        .sort_values(by="Net", ascending=False)
+        .reset_index(drop=True)
+    )
+        return summary
     
     summary = summarize_transactions(df, start_date, end_date)
+
+    summary.insert(0, "#", range(1, len(summary) + 1))
+    summary = summary.set_index("#")
 
     if not summary.empty:
         st.write("### 💼 Vendor Breakdown")
         st.dataframe(summary)
+
         col1, col2, col3 = st.columns(3)
         df.columns = df.columns.str.strip()
         col1.metric("Total Credit", f"${summarize_credit(df, start_date, end_date):,.2f}")
         col2.metric("Total Debit", f"${summarize_debit(df, start_date, end_date):,.2f}")
         col3.metric("Net", f"${summarize_net(df, start_date, end_date):,.2f}")
-        csv = summary.to_csv(index=False).encode('utf-8')
+
+        csv = summary.reset_index().to_csv(index=False).encode('utf-8')
         st.download_button("📥 Download Vendor Summary as CSV", csv, "vendor_summary.csv", "text/csv")
     else:
         st.warning("⚠️ No data in the selected date range.")
