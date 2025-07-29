@@ -13,6 +13,16 @@ with st.expander("ℹ️ What this tool does"):
     - A breakdown by vendor
     - An optional CSV export
     """)
+    
+with st.expander("ℹ️ How to use"):
+    st.markdown("""
+    Upload a CSV file with a maximum file size of 5MB. The file must have 4 columns titled:
+    1. Transaction date
+    2. Company
+        This is the raw transaction label from your bank
+    3. Credit
+    4. Debit
+    """)
 
 st.set_page_config(page_title="Transaction Analyzer", page_icon="📊")
 
