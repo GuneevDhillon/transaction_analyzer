@@ -93,7 +93,7 @@ if uploaded_file:
 
     @st.cache_data
     def summarize_transactions(df, start_date, end_date):
-        mask = (df["Transaction date"] >= start_date) & (df["Transaction date"] <= end_date)
+        mask = (df["Transaction date"] >= start_date) & (df["Transaction date"] <= end_date).reset_index()
         subset = df[mask].copy()
         summary = subset.groupby("Vendor")[["Credit", "Debit", "Net"]].sum().reset_index()
         return summary.sort_values(by="Net", ascending = False)
