@@ -5,7 +5,7 @@ A Streamlit web app that helps you analyze transaction history from a CSV file.
 It summarizes credits, debits, net totals, and vendor breakdowns for any custom date range.
 
 ## Demo
-👉 [Try it Live](https://your-username-your-repo-name.streamlit.app)
+[Try it Live](https://your-username-your-repo-name.streamlit.app)
 
 ## Features
 - Upload a CSV of transactions
