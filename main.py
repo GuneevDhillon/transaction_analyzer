@@ -3,9 +3,9 @@ import pandas as pd
 import re
 from datetime import datetime
 
-st.title("📊 Transaction Analyzer")
+st.title("Transaction Analyzer")
 
-with st.expander("ℹ️ What this tool does"):
+with st.expander("What this tool does"):
     st.markdown("""
     This app analyzes your transaction history over a selected date range, showing you:
     - Credit and debit totals
@@ -14,7 +14,7 @@ with st.expander("ℹ️ What this tool does"):
     - An optional CSV export
     """)
 
-with st.expander("ℹ️ How to use"):
+with st.expander("How to use"):
     st.markdown("""
     Upload a CSV file with a maximum file size of 5MB. The file must have 4 columns titled:
     1. Transaction date
@@ -33,7 +33,7 @@ if uploaded_file:
 
   required_cols = {"Transaction date", "Company", "Credit", "Debit"}
   if not required_cols.issubset(df.columns):
-      st.error("❌ Uploaded file is missing required columns: 'Transaction date', 'Company', 'Credit', 'Debit'. Make sure your columns are titled with these exact phrases.")
+      st.error("Error: Uploaded file is missing required columns: 'Transaction date', 'Company', 'Credit', 'Debit'. Make sure your columns are titled with these exact phrases.")
       st.stop()
 
   if uploaded_file.size > 5_000_000:
@@ -48,11 +48,11 @@ if uploaded_file:
   start_date = datetime.combine(start_date, datetime.min.time())
 
   if start_date > end_date:
-    st.error("❌ End date must be after start date.")
+    st.error("Error; End date must be after start date.")
   
   else:
         
-    st.success(f"📆 Scanning transactions from {start_date} to {end_date}")
+    st.success(f"Scanning transactions from {start_date} to {end_date}")
 
     df["Credit"] = df["Credit"].fillna(0)
     df["Debit"] = df["Debit"].fillna(0)
@@ -110,7 +110,7 @@ if uploaded_file:
     summary = summary.set_index("#")
 
     if not summary.empty:
-        st.write("### 💼 Vendor Breakdown")
+        st.write("### Vendor Breakdown")
         st.dataframe(summary)
 
         col1, col2, col3 = st.columns(3)
@@ -120,6 +120,6 @@ if uploaded_file:
         col3.metric("Net", f"${summarize_net(df, start_date, end_date):,.2f}")
 
         csv = summary.reset_index().to_csv(index=False).encode('utf-8')
-        st.download_button("📥 Download Vendor Summary as CSV", csv, "vendor_summary.csv", "text/csv")
+        st.download_button("Download Vendor Summary as CSV", csv, "vendor_summary.csv", "text/csv")
     else:
-        st.warning("⚠️ No data in the selected date range.")
+        st.warning("Warning: No data in the selected date range.")
