@@ -1,4 +1,4 @@
-# 📊 Transaction Analyzer
+# Transaction Analyzer
 
 ## About the app
 A Streamlit web app that helps you analyze transaction history from a CSV file. 
